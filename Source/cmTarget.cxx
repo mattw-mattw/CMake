@@ -331,6 +331,7 @@ cmTarget::cmTarget(std::string const& name, cmStateEnums::TargetType type,
     InitProperty("FOLDER", nullptr);
     InitProperty("Swift_MODULE_DIRECTORY", nullptr);
     InitProperty("VS_JUST_MY_CODE_DEBUGGING", nullptr);
+    InitProperty("VS_DPI_AWARE", nullptr);
 #ifdef __APPLE__
     if (this->GetGlobalGenerator()->IsXcode()) {
       InitProperty("XCODE_GENERATE_SCHEME", nullptr);

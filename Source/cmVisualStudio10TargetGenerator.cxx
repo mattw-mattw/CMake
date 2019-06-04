@@ -3252,15 +3252,24 @@ void cmVisualStudio10TargetGenerator::WriteManifestOptions(
 
   std::vector<cmSourceFile const*> manifest_srcs;
   this->GeneratorTarget->GetManifests(manifest_srcs, config);
-  if (!manifest_srcs.empty()) {
-    std::ostringstream oss;
-    for (cmSourceFile const* mi : manifest_srcs) {
-      std::string m = this->ConvertPath(mi->GetFullPath(), false);
-      ConvertToWindowsSlash(m);
-      oss << m << ";";
-    }
+
+  const char* dpiAware = this->GeneratorTarget->GetProperty("VS_DPI_AWARE");
+
+  if (!manifest_srcs.empty() || dpiAware)
+  {
     Elem e2(e1, "Manifest");
-    e2.Element("AdditionalManifestFiles", oss.str());
+    if (!manifest_srcs.empty()) {
+      std::ostringstream oss;
+      for (cmSourceFile const* mi : manifest_srcs) {
+        std::string m = this->ConvertPath(mi->GetFullPath(), false);
+        ConvertToWindowsSlash(m);
+        oss << m << ";";
+        e2.Element("AdditionalManifestFiles", oss.str());
+      }
+    }
+    if (dpiAware) {
+      e2.Element("EnableDpiAwareness", dpiAware);
+    }
   }
 }
 
